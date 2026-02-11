@@ -23,7 +23,8 @@ The system consists of three specialized agents coordinated by an Orchestrator:
 
 ## 🛠 Project Structure
 
-- `.gemini/config/`: Contains `agent_config.yaml` for model parameters and `gemini_api.yaml` for API settings.
+- `.gemini/config/`: Contains `agent_config.yaml`, `settings.json` (global settings), and `gemini_api.yaml` for API settings.
+- `.gemini/agents/`: Python implementations and `.toml` metadata/configuration for each agent.
 - `.gemini/prompts/`: System instructions and few-shot examples for each agent.
 - `.gemini/workflows/`: YAML definitions of the multi-stage generation process.
 - `schemas/`: JSON schemas used for data exchange between agents.

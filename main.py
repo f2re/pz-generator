@@ -15,7 +15,20 @@ def load_agent_config():
     with open(config_path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
 
-def main(pdf_path: str):
+def main(pdf_path: Optional[str] = None):
+    # Если путь не передан, ищем в папке pdf/
+    if pdf_path is None:
+        pdf_dir = current_dir / "pdf"
+        pdf_files = list(pdf_dir.glob("*.pdf"))
+        
+        if not pdf_files:
+            print("✗ No PDF files found in 'pdf/' directory.")
+            sys.exit(1)
+        
+        # Берем первый найденный файл
+        pdf_path = str(pdf_files[0])
+        print(f"→ Found PDF: {pdf_path}")
+
     # Загрузить конфигурацию агентов
     config = load_agent_config()
     
@@ -38,8 +51,6 @@ def main(pdf_path: str):
             print(f"  → Escalated for human review")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python main.py <path_to_pdf>")
-        sys.exit(1)
-    
-    main(sys.argv[1])
+    from typing import Optional
+    path_arg = sys.argv[1] if len(sys.argv) > 1 else None
+    main(path_arg)
