@@ -13,7 +13,6 @@ agents:
     
   programmer:
     name: "Notebook Programmer Agent"
-    model: "gemini-2.0-pro-exp"
     temperature: 0.3
     max_tokens: 16384
     system_instruction_path: ".gemini/prompts/programmer_prompt.txt"

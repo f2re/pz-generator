@@ -1,0 +1,13 @@
+name = "orchestrator"
+display_name = "Workflow Orchestrator ⚙️"
+description = "Coordinates the end-to-end process of generating Jupyter Notebooks from PDF materials by managing the analyzer, programmer, and tester agents."
+
+[orchestrator]
+max_iterations = 3
+min_quality_score = 70
+pdf_directory = "pdf"
+
+[agents]
+analyzer = { name = "analyzer", model = "gemini-2.0-flash-exp", system_instruction_path = ".gemini/prompts/analyzer_prompt.txt" }
+programmer = { name = "programmer", model = "gemini-2.0-pro-exp", system_instruction_path = ".gemini/prompts/programmer_prompt.txt" }
+tester = { name = "tester", model = "gemini-2.0-flash", system_instruction_path = ".gemini/prompts/tester_prompt.txt" }

@@ -7,7 +7,9 @@ from pathlib import Path
 current_dir = Path(__file__).parent
 sys.path.append(str(current_dir / ".gemini"))
 
-from agents.orchestrator import Orchestrator
+from agents.orchestrator import OrchestratorAgent
+
+def load_agent_config():
 
 def load_agent_config():
     """Загрузка конфигурации из .gemini/"""
@@ -16,31 +18,15 @@ def load_agent_config():
         return yaml.safe_load(f)
 
 def main(pdf_path: Optional[str] = None):
-    # Если путь не передан, ищем в папке pdf/
-    if pdf_path is None:
-        pdf_dir = current_dir / "pdf"
-        pdf_files = list(pdf_dir.glob("*.pdf"))
-        
-        if not pdf_files:
-            print("✗ No PDF files found in 'pdf/' directory.")
-            sys.exit(1)
-        
-        # Берем первый найденный файл
-        pdf_path = str(pdf_files[0])
-        print(f"→ Found PDF: {pdf_path}")
-
     # Загрузить конфигурацию агентов
     config = load_agent_config()
     
     # Инициализировать оркестратор
-    orchestrator = Orchestrator(config)
+    orchestrator = OrchestratorAgent(config)
     
     # Запустить workflow
-    workflow_path = str(current_dir / ".gemini" / "workflows" / "notebook_generation.yaml")
-    result = orchestrator.run(
-        pdf_path=pdf_path,
-        workflow_config_path=workflow_path
-    )
+    # Orchestrator сам найдет PDF в папке pdf/, если pdf_path не передан
+    result = orchestrator.run(pdf_path=pdf_path)
     
     if result.status == "success":
         print(f"✓ Notebook generated: {result.output_path}")
