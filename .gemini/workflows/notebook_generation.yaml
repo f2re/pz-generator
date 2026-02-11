@@ -1,0 +1,36 @@
+workflow:
+  name: "PDF to Jupyter Notebook Generation"
+  version: "1.0.0"
+  
+  stages:
+    - name: "analyze"
+      agent: "analyzer"
+      input: "pdf_file"
+      output: "json_spec"
+      validation:
+        - type: "json_schema"
+          schema: "schemas/practice_spec.json"
+      on_failure: "retry_or_escalate"
+      
+    - name: "program"
+      agent: "programmer"
+      input: "json_spec"
+      output: "notebook_file"
+      validation:
+        - type: "file_exists"
+        - type: "ipynb_format"
+      on_failure: "retry_with_feedback"
+      
+    - name: "test"
+      agent: "tester"
+      input: ["notebook_file", "json_spec"]
+      output: "review_json"
+      validation:
+        - type: "score_threshold"
+          min_score: 70
+      on_failure: "feedback_loop"
+      
+  feedback_loop:
+    max_iterations: 3
+    stages: ["program", "test"]
+    escalate_after: 3

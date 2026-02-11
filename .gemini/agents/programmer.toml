@@ -1,0 +1,21 @@
+[agent]
+name = "Notebook Programmer Agent"
+description = "Converts JSON specifications into functional Jupyter Notebooks."
+model = "gemini-2.0-pro-exp"
+temperature = 0.3
+max_tokens = 16384
+system_instruction_path = ".gemini/prompts/programmer_prompt.txt"
+retry_limit = 3
+context_caching = true
+
+[capabilities]
+tools = [
+    "generate_notebook_cell",
+    "add_markdown_explanation",
+    "validate_syntax",
+    "suggest_visualizations"
+]
+
+[output]
+format = "ipynb"
+directory = "output"

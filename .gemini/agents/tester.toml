@@ -1,0 +1,21 @@
+[agent]
+name = "Notebook Tester Agent"
+description = "Validates generated notebooks against specifications and ensures code quality."
+model = "gemini-2.0-flash"
+temperature = 0.0
+max_tokens = 8192
+system_instruction_path = ".gemini/prompts/tester_prompt.txt"
+retry_limit = 3
+execution_timeout = 300
+
+[capabilities]
+tools = [
+    "execute_notebook",
+    "compare_with_spec",
+    "static_code_analysis",
+    "check_pedagogical_quality"
+]
+
+[validation]
+min_quality_score = 70
+schema = "schemas/review_result.json"

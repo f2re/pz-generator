@@ -1,0 +1,25 @@
+{
+  "project_name": "PZ Generator",
+  "version": "1.0.0",
+  "api_settings": {
+    "provider": "google",
+    "base_url": null,
+    "timeout": 60
+  },
+  "paths": {
+    "prompts": ".gemini/prompts",
+    "workflows": ".gemini/workflows",
+    "agents": ".gemini/agents",
+    "output": "output",
+    "logs": "logs"
+  },
+  "defaults": {
+    "model": "gemini-2.0-flash-exp",
+    "temperature": 0.2,
+    "max_tokens": 8192
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  }
+}

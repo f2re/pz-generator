@@ -1,0 +1,9 @@
+google-generativeai
+pyyaml
+nbformat
+papermill
+pymupdf
+langgraph
+pandas
+numpy
+scikit-learn

@@ -1,0 +1,46 @@
+agents:
+  analyzer:
+    name: "PDF Analyzer Agent"
+    model: "gemini-2.0-flash-exp"
+    temperature: 0.1
+    max_tokens: 8192
+    system_instruction_path: ".gemini/prompts/analyzer_prompt.txt"
+    tools:
+      - extract_pdf_structure
+      - identify_code_blocks
+      - validate_json_schema
+    retry_limit: 3
+    
+  programmer:
+    name: "Notebook Programmer Agent"
+    model: "gemini-2.0-pro-exp"
+    temperature: 0.3
+    max_tokens: 16384
+    system_instruction_path: ".gemini/prompts/programmer_prompt.txt"
+    tools:
+      - generate_notebook_cell
+      - add_markdown_explanation
+      - validate_syntax
+      - suggest_visualizations
+    context_caching: true
+    retry_limit: 3
+    
+  tester:
+    name: "Notebook Tester Agent"
+    model: "gemini-2.0-flash"  # Cheaper для testing
+    temperature: 0.0
+    max_tokens: 8192
+    system_instruction_path: ".gemini/prompts/tester_prompt.txt"
+    tools:
+      - execute_notebook
+      - compare_with_spec
+      - static_code_analysis
+      - check_pedagogical_quality
+    execution_timeout: 300  # 5 minutes
+    retry_limit: 3
+
+orchestrator:
+  max_iterations: 3
+  min_quality_score: 70
+  enable_human_review: true
+  human_review_threshold: 50
