@@ -1,0 +1,76 @@
+[agent]
+name = "theory_writer"
+version = "2.0.0"
+role = "content_generator"
+description = "Генерация теоретического контента"
+
+[pedagogical_principles]
+# Педагогические принципы
+scaffold = true  # От простого к сложному
+examples_before_theory = false  # Теория перед примерами
+interactive_elements = true  # Интерактивные элементы
+checkpoints = true  # Контрольные точки
+visual_aids = true  # Визуализации
+progressive_difficulty = true  # Постепенное усложнение
+
+[structure]
+# Структура контента
+include_header = true
+include_objectives = true
+include_imports = true
+include_introduction = true
+include_theory = true
+include_examples = true
+include_checkpoints = true
+include_conclusion = true
+
+[formatting]
+# Настройки форматирования
+max_section_length = 500  # слов
+min_section_length = 50
+paragraph_max_sentences = 5
+use_callouts = true
+use_latex = true
+use_emoji = true
+
+[examples]
+# Настройки примеров
+examples_per_concept = 1
+include_code_comments = true
+include_explanations = true
+runnable_examples = true
+
+[checkpoints]
+# Настройки контрольных точек
+frequency = 2  # каждые N секций
+include_questions = true
+include_key_points = true
+interactive = false
+
+[markdown]
+# Markdown стиль
+header_level_start = 2  # ## для основных разделов
+use_bold_for_terms = true
+use_italic_for_emphasis = true
+use_blockquotes = true
+list_style = "bullets"  # bullets, numbers, mixed
+
+[code_blocks]
+# Настройки блоков кода
+language = "python"
+include_output = false
+syntax_highlighting = true
+line_numbers = false
+
+[imports]
+# Настройки импортов
+group_by_purpose = true
+add_comments = true
+standard_aliases = true  # np, pd, plt, sns
+include_matplotlib_inline = true
+
+[enhancement]
+# Настройки дополнения
+auto_enhance = true
+max_enhancements = 3
+enhancement_mode = "insert"  # insert, append, replace

@@ -1,43 +1,84 @@
+[agent]
 name = "tester"
-display_name = "QA Engineer 🧪"
-description = "Specialized QA agent for validating generated notebooks and ensuring they meet quality standards."
+version = "2.0.0"
+role = "validator"
+description = "Тестирование Jupyter Notebooks"
 
-tools = [
-    "read_file",
-    "run_shell_command",
-    "write_file"
+[quality_criteria]
+# Критерии качества с весами
+executability = 0.30
+completeness = 0.25
+code_quality = 0.20
+documentation = 0.15
+pedagogical = 0.10
+
+[execution]
+# Настройки выполнения
+timeout_seconds = 600
+kernel_name = "python3"
+allow_errors = false
+capture_output = true
+interrupt_on_timeout = true
+
+[completeness_check]
+# Проверка полноты структуры
+required_elements = [
+    "header",
+    "objectives",
+    "introduction",
+    "theory",
+    "examples",
+    "practice"
 ]
+warn_on_missing = true
+fail_on_critical_missing = false
 
-[prompts]
-system_prompt = """
-Ты — QA инженер для образовательных Jupyter Notebooks. Твоя задача:
+[code_quality]
+# Проверка качества кода
+check_comments = true
+check_line_length = true
+max_line_length = 100
+check_imports_location = true
+check_debug_code = true
+use_linter = false  # pylint/flake8
+linter_config = ".pylintrc"
 
-1. Проверить предоставленный notebook (.ipynb):
-    - Все ячейки синтаксически верны и выполняются без ошибок.
-    - Выход кода соответствует ожиданиям из исходной JSON спецификации.
-    - Комментарии и текстовые описания понятны и достаточны для студента.
-    - Нет "захардкоженных" путей к файлам, которые отсутствуют в окружении.
+[documentation]
+# Проверка документированности
+optimal_markdown_ratio_min = 0.33
+optimal_markdown_ratio_max = 0.50
+count_inline_code = false
+require_cell_comments = false
 
-2. Сравнить результат с исходной спецификацией:
-    - Все задачи из спецификации покрыты.
-    - Логика решения соответствует теоретическому материалу.
-    - Уровень сложности соответствует заявленному.
+[pedagogical]
+# Педагогическая оценка
+require_checkpoints = true
+require_examples = true
+require_hints = false  # зависит от уровня
+min_examples_count = 2
 
-3. Выдать отчет в формате JSON, соответствующем схеме `schemas/review_result.json`.
+[scoring]
+# Настройки скоринга
+pass_threshold = 0.70
+good_threshold = 0.80
+excellent_threshold = 0.90
 
-## Формат отчета:
-{
-  "status": "pass/fail",
-  "errors": [
-    {"cell": 5, "error": "Описание ошибки"}
-  ],
-  "missing_tasks": ["task_id: 2.3"],
-  "logic_mismatches": ["Описание несоответствия"],
-  "suggestions": ["Как улучшить"],
-  "score": 85
-}
+[reporting]
+# Генерация отчётов
+include_execution_time = true
+include_cell_outputs = false
+include_traceback = true
+detail_level = "detailed"  # minimal, normal, detailed
 
-Минимальный проходной балл — 70. Если балл ниже, подробно опиши причины в `suggestions`.
-"""
+[feedback]
+# Обратная связь
+generate_suggestions = true
+prioritize_suggestions = true
+max_suggestions = 10
+include_examples = true
 
-query = "${query}"
+[performance]
+# Производительность
+cache_results = false
+parallel_execution = false
+measure_cell_time = true

@@ -2,14 +2,13 @@ import os
 import yaml
 import sys
 from pathlib import Path
+from typing import Optional
 
 # Add .gemini directory to path to allow importing from agents
 current_dir = Path(__file__).parent
 sys.path.append(str(current_dir / ".gemini"))
 
 from agents.orchestrator import OrchestratorAgent
-
-def load_agent_config():
 
 def load_agent_config():
     """Загрузка конфигурации из .gemini/"""

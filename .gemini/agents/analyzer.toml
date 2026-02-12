@@ -1,50 +1,66 @@
+[agent]
 name = "analyzer"
-display_name = "Educational Material Analyst 📊"
-description = "Specialized agent for analyzing educational PDF materials and extracting structured practice specifications."
+version = "2.0.0"
+role = "analyzer"
+description = "Анализ PDF и извлечение спецификации"
 
-tools = [
-    "read_file",
-    "list_files",
-    "grep_search"
+[extraction]
+# Настройки извлечения текста
+pdf_library = "pypdf2"  # pypdf2, pdfplumber
+preserve_layout = false
+extract_images = false
+extract_tables = true
+
+[analysis]
+# Настройки анализа
+enable_nlp = false
+language = "ru"  # ru, en, auto
+min_concept_length = 10
+max_concept_length = 200
+min_section_length = 50
+
+[difficulty_detection]
+# Ключевые слова для определения уровня
+beginner_keywords = ["введение", "основы", "базовый", "начальный", "introduction", "basic"]
+intermediate_keywords = ["средний", "практический", "intermediate", "practical"]
+advanced_keywords = ["продвинутый", "advanced", "expert", "углублённый"]
+
+[objectives]
+# Настройки извлечения учебных целей
+search_patterns = [
+    "(?:цел[ьи]|objectives?|goals?)[\s:]+(.+?)(?=\n\n|\Z)",
+    "(?:после изучения|after completing)[\s:]+(.+?)(?=\n\n|\Z)",
+    "(?:вы научитесь|you will learn)[\s:]+(.+?)(?=\n\n|\Z)"
+]
+bloom_taxonomy = true
+max_objectives = 10
+
+[concepts]
+# Настройки извлечения концепций
+definition_patterns = [
+    "([А-ЯA-Z][а-яa-z\s]+)\s*[—–-]\s*(.+?)(?=\n|$)",
+    "([А-ЯA-Z][а-яa-z\s]+)\s*:\s*(.+?)(?=\n|$)",
+    "\*\*([^*]+)\*\*\s*[—–:-]\s*(.+?)(?=\n|$)"
+]
+max_concepts = 20
+importance_threshold = 2  # минимум упоминаний
+
+[libraries]
+# Список распознаваемых библиотек
+common_libraries = [
+    "numpy", "pandas", "matplotlib", "seaborn", "scipy",
+    "sklearn", "scikit-learn", "tensorflow", "torch", "pytorch",
+    "plotly", "bokeh", "requests", "beautifulsoup4", "bs4",
+    "keras", "xgboost", "lightgbm", "statsmodels"
 ]
 
-[prompts]
-system_prompt = """
-Ты — аналитик образовательных материалов. Твоя задача:
+[time_estimation]
+# Формулы оценки времени (в минутах)
+theory_section_time = 10
+task_time = 15
+example_time = 5
 
-1. Прочитать предоставленный контент (обычно извлеченный из PDF) и идентифицировать все практические задания.
-2. Для каждой практики извлечь:
-    - Номер практики
-    - Название/тему
-    - Теоретический контекст
-    - Входные данные
-    - Требуемые шаги решения
-    - Ожидаемый результат
-3. Выдать структурированный JSON, соответствующий схеме `schemas/practice_spec.json`.
-
-## Формат выхода:
-{
-  "practices": [
-    {
-      "number": 1,
-      "title": "Название практики",
-      "theory": "Краткое описание теории",
-      "tasks": [
-        {
-          "task_id": "1.1",
-          "description": "Описание задачи",
-          "inputs": ["файл.csv"],
-          "steps": ["шаг 1", "шаг 2"],
-          "expected_output": "Ожидаемый результат"
-        }
-      ],
-      "libraries": ["pandas", "numpy"],
-      "difficulty": "intermediate"
-    }
-  ]
-}
-
-Будь точен в извлечении технических деталей и названий библиотек.
-"""
-
-query = "${query}"
+[output]
+format = "json"
+indent = 2
+ensure_ascii = false

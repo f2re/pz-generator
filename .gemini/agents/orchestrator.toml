@@ -1,13 +1,51 @@
+[agent]
 name = "orchestrator"
-display_name = "Workflow Orchestrator ⚙️"
-description = "Coordinates the end-to-end process of generating Jupyter Notebooks from PDF materials by managing the analyzer, programmer, and tester agents."
+version = "2.0.0"
+role = "coordinator"
+description = "Координирует процесс генерации Jupyter Notebooks"
 
-[orchestrator]
+[paths]
+pdf_directory = "./pdf"
+output_directory = "./output"
+intermediate_directory = "./output/intermediate"
+logs_directory = "./logs"
+
+[execution]
 max_iterations = 3
-min_quality_score = 70
-pdf_directory = "pdf"
+quality_threshold = 0.80
+timeout_seconds = 600
+parallel_processing = false
 
 [agents]
-analyzer = { name = "analyzer", model = "gemini-2.0-flash-exp", system_instruction_path = ".gemini/prompts/analyzer_prompt.txt" }
-programmer = { name = "programmer", model = "gemini-2.0-pro-exp", system_instruction_path = ".gemini/prompts/programmer_prompt.txt" }
-tester = { name = "tester", model = "gemini-2.0-flash", system_instruction_path = ".gemini/prompts/tester_prompt.txt" }
+# Конфигурация используемых агентов
+analyzer = "analyzer"
+theory_writer = "theory_writer"
+programmer = "programmer"
+validator = "validator"
+tester = "tester"
+
+[feedback]
+# Настройки обратной связи
+enable_feedback_loop = true
+feedback_detail_level = "detailed"  # minimal, normal, detailed
+max_feedback_iterations = 2
+
+[output]
+# Настройки выходных файлов
+save_intermediate = true
+save_report = true
+notebook_format = "ipynb"
+report_format = "json"
+
+[logging]
+level = "INFO"  # DEBUG, INFO, WARNING, ERROR
+format = "detailed"
+log_to_file = true
+log_to_console = true
+log_filename = "orchestrator.log"
+
+[performance]
+# Настройки производительности
+cache_enabled = true
+cache_ttl_seconds = 3600
+memory_limit_mb = 2048

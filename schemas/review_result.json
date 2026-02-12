@@ -1,22 +1,20 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "status": { "type": "string", "enum": ["pass", "fail"] },
-    "errors": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "cell": { "type": "integer" },
-          "error": { "type": "string" }
-        }
-      }
+  "notebook": "output/solved/practice_2_solved.ipynb",
+  "status": "fail",
+  "quality_score": 0.6,
+  "feedback": {
+    "libraries": {
+      "re": "Imported but not used.",
+      "numpy": "Used correctly.",
+      "pandas": "Imported but not used. Spec requested CSV output which would typically use pandas.",
+      "warnings": "Used correctly."
     },
-    "missing_tasks": { "type": "array", "items": { "type": "string" } },
-    "logic_mismatches": { "type": "array", "items": { "type": "string" } },
-    "suggestions": { "type": "array", "items": { "type": "string" } },
-    "score": { "type": "integer", "minimum": 0, "maximum": 100 }
-  },
-  "required": ["status", "score"]
+    "tasks": {
+      "P2_T1": "Partially implemented. Only covers Region 2 limits. Ignores the 'region' parameter. Does not distinguish between warning levels (MIN1/MAX1) and physical limits (MIN2/MAX2).",
+      "P2_T2": "Partially implemented. Covers basic wind and fog checks. Missing: variable wind (dd=99), haze (ww=10), and cloudiness consistency.",
+      "P2_T3": "Partially implemented. Implements hydrostatic check. Missing: vertical profile inversion check and CSV report generation."
+    },
+    "logic": "The implemented functions work as intended for the subsets of rules they cover, but they are incomplete relative to the specification.",
+    "execution": "Passed. The notebook runs without errors."
+  }
 }

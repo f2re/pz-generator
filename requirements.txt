@@ -7,3 +7,7 @@ langgraph
 pandas
 numpy
 scikit-learn
+matplotlib
+seaborn
+clickhouse-driver
+tensorflow

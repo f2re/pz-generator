@@ -1,30 +1,112 @@
 ---
 name: analyzer
-description: Specialized agent for analyzing educational PDF materials and extracting structured practice specifications.
+description: Анализирует PDF документы и извлекает структурированную спецификацию
 ---
-# Educational Material Analyst 📊
 
-## Purpose
-Analyzes educational PDF materials and extracts a structured JSON specification of practices and tasks. This specification serves as the blueprint for notebook generation.
+# Analyzer Agent 📊
 
-## Capabilities
-- Extraction of practice numbers, titles, and theoretical context from PDF.
-- Identification of specific tasks, inputs, steps, and expected outputs.
-- Mapping required libraries and determining difficulty levels.
-- Outputting structured data according to `schemas/practice_spec.json`.
+## Назначение
+Analyzer agent анализирует PDF документы с учебными материалами и извлекает структурированную спецификацию, которая используется остальными агентами для генерации notebook.
 
-## Tech Stack
-- PDF processing logic
-- JSON Schema validation
-- LLM for semantic extraction
+## Возможности
+- **Text Extraction:** Извлечение текста из PDF с сохранением структуры
+- **Metadata Extraction:** Получение метаданных документа
+- **Structure Analysis:** Определение разделов, заголовков, списков
+- **Concept Extraction:** Выявление ключевых концепций и определений
+- **Objective Detection:** Извлечение учебных целей
+- **Difficulty Assessment:** Определение уровня сложности
+- **Requirement Analysis:** Выявление требуемых библиотек и датасетов
 
-## Tools
-- `read_file` — Analyze PDF content (via text extraction) or schemas.
-- `list_files` — Locate educational materials in the `pdf/` directory.
+## Технологический стек
+- PyPDF2 / pdfplumber — извлечение текста
+- Regular expressions — парсинг структуры
+- NLP (optional) — анализ концепций
+- JSON — формат выходных данных
 
-## Workflow
-1. Receives a PDF file or a path to it.
-2. Processes the text content to identify practice boundaries.
-3. Extracts detailed metadata for each task within the practices.
-4. Validates the extracted data against the target schema.
-5. Returns the structured JSON specification.
+## Входные данные
+- PDF файл с учебными материалами
+- Опциональные параметры анализа
+
+## Выходные данные
+
+### Структура спецификации:
+```json
+{
+  "title": "Название материала",
+  "description": "Краткое описание",
+  "difficulty_level": "beginner|intermediate|advanced",
+  "estimated_time": 90,
+  "learning_objectives": [
+    {
+      "id": "obj_1",
+      "description": "Описание цели",
+      "level": "знание|понимание|применение|анализ|синтез",
+      "keywords": ["ключевые", "слова"]
+    }
+  ],
+  "concepts": [
+    {
+      "name": "Концепция",
+      "definition": "Определение",
+      "importance": "critical|important|supplementary",
+      "prerequisites": ["предварительные", "требования"]
+    }
+  ],
+  "theory_sections": [
+    {
+      "title": "Заголовок секции",
+      "content": "Содержание",
+      "order": 1
+    }
+  ],
+  "practice_requirements": {
+    "tasks": [
+      {
+        "id": "task_1",
+        "description": "Описание задания",
+        "difficulty": "easy|medium|hard"
+      }
+    ],
+    "constraints": [],
+    "expected_outputs": []
+  },
+  "libraries_required": ["numpy", "pandas"],
+  "datasets_required": ["data.csv"]
+}
+```
+
+## Алгоритмы анализа
+
+### 1. Определение уровня сложности
+- Анализ ключевых слов (введение, основы, продвинутый)
+- Оценка сложности математических формул
+- Анализ структуры (количество секций, глубина)
+
+### 2. Извлечение учебных целей
+- Поиск секций "Цели", "Objectives", "После изучения"
+- Классификация по таксономии Блума
+- Извлечение ключевых слов
+
+### 3. Выявление концепций
+- Поиск определений (паттерны "Термин: определение")
+- Анализ выделенного текста (bold, italic)
+- Частотный анализ терминов
+
+### 4. Анализ практических требований
+- Поиск секций "Задания", "Практика", "Exercises"
+- Извлечение описаний задач
+- Определение входных/выходных данных
+
+## Конфигурация
+См. `analyzer.toml` для параметров анализа.
+
+## Обработка ошибок
+- **PDFReadError:** Если PDF повреждён или защищён
+- **EncodingError:** Проблемы с кодировкой текста
+- **ParseError:** Невозможно распознать структуру
+
+## Расширение
+Для добавления новых паттернов анализа:
+1. Расширьте `pattern_library` в конфигурации
+2. Добавьте обработчик в `_extract_*` методы
+3. Обновите схему выходной спецификации

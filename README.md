@@ -1,13 +1,28 @@
 # PZ Generator: PDF to Jupyter Multi-Agent System
 
-An automated pipeline that converts educational PDF lectures and practices into interactive Jupyter Notebooks (.ipynb) using Google Gemini agents.
+An advanced automated pipeline that converts educational PDF lectures and practices into interactive, high-quality Jupyter Notebooks (.ipynb) using a coordinated team of Google Gemini agents.
 
 ## 🌟 Features
 
-- **Automated Extraction:** Analyzes PDF structure to identify tasks and theory.
-- **Smart Programming:** Generates idiomatic Python code for Data Science.
-- **Self-Correction:** Integrated QA agent that tests notebooks and provides feedback for improvements.
-- **Configurable Workflow:** Easily adjust agent behavior via `.gemini/` configuration.
+- **End-to-End Automation:** Complete pipeline from PDF to executed Notebook.
+- **Multi-Agent Architecture:** 6 specialized agents working in concert.
+- **Pedagogical Quality:** Ensures theory completeness, progressive difficulty, and clear explanations.
+- **Automated Testing:** Validates code execution and structural integrity.
+- **Self-Correction:** Feedback loops improve content quality automatically.
+- **Structured Logging:** Detailed logs in `logs/` for monitoring and debugging.
+
+## 🤖 Agents Overview
+
+The system uses an **Orchestrator** pattern coordinating 5 specialized agents:
+
+1.  **Orchestrator:** Coordinates the entire workflow and manages state.
+2.  **Analyzer:** Extracts structured specifications from PDF materials.
+3.  **Theory Writer:** Generates methodical theoretical content with examples.
+4.  **Programmer:** Creates practical tasks, starter code, and tests.
+5.  **Validator:** Ensures alignment between theory and practice.
+6.  **Tester:** Validates the final notebook for execution and quality.
+
+See [.gemini/agents/](./.gemini/agents/) for detailed documentation on each agent.
 
 ## 🛠 Installation
 
@@ -27,19 +42,34 @@ An automated pipeline that converts educational PDF lectures and practices into 
 
 ## 🚀 Usage
 
-Run the generator by providing a path to your PDF file:
+Run the generator. It will automatically detect PDF files in the `pdf/` directory:
 
 ```bash
-python main.py pdf/your_lecture.pdf
+python main.py [optional/path/to/specific.pdf]
 ```
 
-The generated notebook will be saved in the `output/` directory.
+The generated notebooks will be saved in the `output/` directory, along with reports.
 
-## 🏗 Architecture
+## 🏗 Architecture & Workflow
 
-The system uses an **Orchestrator** pattern:
-- **Analyzer:** PDF → JSON
-- **Programmer:** JSON → .ipynb
-- **Tester:** Validation & Review
+The generation follows a strict quality-controlled pipeline:
 
-See [GEMINI.md](./GEMINI.md) for detailed agent documentation.
+1.  **Analysis:** PDF is analyzed for learning objectives and concepts.
+2.  **Theory Generation:** Educational content is created based on the analysis.
+3.  **Practice Generation:** Practical tasks are generated to match the theory.
+4.  **Validation Loop:** Validator checks if theory covers all practice requirements. If not, Theory Writer adds missing content.
+5.  **Testing:** The combined notebook is executed and scored.
+6.  **Finalization:** If quality thresholds are met, the result is saved.
+
+## 📁 Project Structure
+
+- `.gemini/agents/`: Agent definitions and configurations.
+- `.gemini/config/`: Global system configuration.
+- `.gemini/prompts/`: System prompts for LLMs.
+- `pdf/`: Input directory for lecture PDFs.
+- `output/`: Output directory for generated notebooks.
+- `logs/`: Execution logs.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read the agent documentation before making changes to the agent logic.

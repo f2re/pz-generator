@@ -1,33 +1,111 @@
 ---
 name: orchestrator
-description: Coordinates the end-to-end process of generating Jupyter Notebooks from PDF materials.
+description: Координирует end-to-end процесс генерации Jupyter Notebooks из PDF материалов
 ---
+
 # Workflow Orchestrator ⚙️
 
-## Purpose
-The Orchestrator agent is responsible for managing the entire lifecycle of notebook generation. It finds input materials, sequences agent calls, and handles feedback loops between the Programmer and Tester agents.
+## Назначение
+Orchestrator agent отвечает за управление полным жизненным циклом генерации учебных Jupyter Notebooks. Координирует работу всех агентов, управляет потоком данных и обратной связью.
 
-## Capabilities
-- **PDF Discovery:** Scans the `pdf/` directory for input materials.
-- **Workflow Management:** Executes the sequence: Analyzer -> Programmer -> Tester.
-- **Feedback Loop:** If the Tester reports a low quality score or execution errors, it triggers a retry with the Programmer, providing the feedback.
-- **Result Finalization:** Delivers the final notebook and quality report.
+## Возможности
+- **PDF Discovery:** Сканирование директории `pdf/` для поиска входных материалов
+- **Workflow Management:** Управление последовательностью: Analyzer → Theory Writer → Programmer → Validator → Tester
+- **Feedback Loop:** При низком качестве или ошибках запускает повторную генерацию с учётом обратной связи
+- **State Management:** Отслеживание состояния процесса и промежуточных результатов
+- **Result Finalization:** Сохранение финального notebook и отчёта о качестве
 
-## Tech Stack
+## Технологический стек
 - Python orchestration logic
 - YAML/TOML configuration management
 - Multi-agent coordination
+- State persistence (JSON)
+- Logging and reporting
 
-## Tools
-- `list_files` — Scan the `pdf/` directory.
-- `analyzer` — Extract specifications from PDF.
-- `programmer` — Generate code from specifications.
-- `tester` — Validate and execute the generated notebook.
+## Инструменты (Tools)
+- `list_files` — Сканирование директории с PDF
+- `analyzer` — Извлечение спецификации из PDF
+- `theory_writer` — Генерация теоретического контента
+- `programmer` — Генерация практических заданий
+- `validator` — Проверка полноты теории для практики
+- `tester` — Валидация и исполнение notebook
 
-## Workflow
-1. Locate the first available PDF in the `pdf/` folder.
-2. Invoke the **Analyzer Agent** to get a JSON specification.
-3. Invoke the **Programmer Agent** to generate a draft notebook.
-4. Invoke the **Tester Agent** to evaluate the notebook.
-5. If score < threshold, repeat step 3-4 with feedback (up to `max_iterations`).
-6. Report success or failure.
+## Рабочий процесс (Workflow)
+
+1. **Initialization**
+   - Загрузка конфигурации
+   - Инициализация всех агентов
+   - Поиск PDF файлов
+
+2. **Analysis Phase**
+   - Вызов Analyzer для извлечения спецификации
+   - Сохранение промежуточного результата
+
+3. **Theory Generation Phase**
+   - Вызов Theory Writer для создания теории
+   - Сохранение теоретического контента
+
+4. **Practice Generation Phase** (с feedback loop)
+   - Вызов Programmer для создания практики
+   - Вызов Validator для проверки полноты
+   - Если теория неполная → дополнение Theory Writer
+   - Повтор до `max_iterations`
+
+5. **Testing Phase**
+   - Объединение теории и практики
+   - Вызов Tester для валидации
+   - Если score < threshold → возврат к шагу 4
+   - Иначе → финализация
+
+6. **Finalization**
+   - Сохранение итогового notebook
+   - Генерация отчёта
+   - Логирование статистики
+
+## Конфигурация
+См. `orchestrator.toml` для параметров:
+- Директории входа/выхода
+- Пороги качества
+- Максимальное количество итераций
+- Настройки логирования
+
+## Выходные данные
+
+### Структура output директории:
+```
+output/
+├── intermediate/
+│   ├── specification.json
+│   ├── theory.json
+│   └── practice.json
+├── {pdf_name}_complete.ipynb
+└── {pdf_name}_report.json
+```
+
+### Формат отчёта:
+```json
+{
+  "pdf_source": "path/to/file.pdf",
+  "notebook_output": "output/file_complete.ipynb",
+  "iterations": 2,
+  "quality_score": 0.87,
+  "status": "success",
+  "specification": {...},
+  "quality_details": {...}
+}
+```
+
+## Обработка ошибок
+- **FileNotFoundError:** Если PDF файлы не найдены
+- **ValidationError:** Если спецификация невалидна
+- **ExecutionError:** Если агенты возвращают ошибки
+- **TimeoutError:** Если превышено время ожидания
+
+При критических ошибках процесс прерывается с сохранением промежуточных результатов.
+
+## Метрики
+- Количество обработанных PDF
+- Среднее время генерации
+- Средний quality score
+- Количество итераций feedback loop
+- Процент успешных генераций

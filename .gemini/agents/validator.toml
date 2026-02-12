@@ -1,0 +1,62 @@
+[agent]
+name = "validator"
+version = "2.0.0"
+role = "validator"
+description = "Валидация полноты и согласованности"
+
+[validation_rules]
+# Правила валидации
+concept_coverage = true
+prerequisite_check = true
+example_presence = true
+progressive_difficulty = true
+theory_practice_alignment = true
+
+[thresholds]
+# Пороговые значения
+concept_coverage_min = 0.95
+prerequisite_coverage_min = 1.0
+example_ratio_min = 0.5
+difficulty_variance_max = 0.3
+overall_score_min = 0.80
+
+[weights]
+# Веса для расчёта общего score
+concept_coverage = 0.40
+prerequisite_check = 0.25
+example_sufficiency = 0.20
+progressive_difficulty = 0.15
+
+[concept_extraction]
+# Настройки извлечения концепций
+method = "keyword"  # keyword, nlp, hybrid
+case_sensitive = false
+min_occurrences = 1
+include_synonyms = false
+
+[example_analysis]
+# Анализ примеров
+min_examples_per_section = 1
+count_inline_code = true
+count_code_cells = true
+require_runnable = true
+
+[difficulty_assessment]
+# Оценка сложности
+metrics = ["code_length", "complexity", "dependencies"]
+allow_stable_difficulty = true
+max_difficulty_jump = 2
+
+[recommendations]
+# Генерация рекомендаций
+priority_levels = ["critical", "important", "minor"]
+max_recommendations = 10
+group_similar = true
+include_suggestions = true
+
+[output]
+# Формат выходных данных
+include_details = true
+include_scores = true
+include_recommendations = true
+format = "json"

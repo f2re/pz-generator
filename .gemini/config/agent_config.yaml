@@ -1,7 +1,19 @@
 agents:
+  orchestrator:
+    name: "Workflow Orchestrator"
+    temperature: 0.1
+    max_tokens: 4096
+    system_instruction_path: ".gemini/prompts/orchestrator_prompt.txt"
+    tools:
+      - list_files
+      - read_file
+      - write_file
+      - run_shell_command
+      - delegate_to_agent
+    retry_limit: 3
+
   analyzer:
     name: "PDF Analyzer Agent"
-    model: "gemini-2.0-flash-exp"
     temperature: 0.1
     max_tokens: 8192
     system_instruction_path: ".gemini/prompts/analyzer_prompt.txt"
@@ -11,6 +23,17 @@ agents:
       - validate_json_schema
     retry_limit: 3
     
+  theory_writer:
+    name: "Theory Writer Agent"
+    temperature: 0.4
+    max_tokens: 16384
+    system_instruction_path: ".gemini/prompts/theory_writer_prompt.txt"
+    tools:
+      - generate_markdown_content
+      - generate_latex_formulas
+      - suggest_visualizations
+    retry_limit: 3
+
   programmer:
     name: "Notebook Programmer Agent"
     temperature: 0.3
@@ -20,13 +43,23 @@ agents:
       - generate_notebook_cell
       - add_markdown_explanation
       - validate_syntax
-      - suggest_visualizations
+      - generate_tests
     context_caching: true
+    retry_limit: 3
+
+  validator:
+    name: "Content Validator Agent"
+    temperature: 0.1
+    max_tokens: 4096
+    system_instruction_path: ".gemini/prompts/validator_prompt.txt"
+    tools:
+      - check_completeness
+      - verify_prerequisites
+      - assess_difficulty
     retry_limit: 3
     
   tester:
     name: "Notebook Tester Agent"
-    model: "gemini-2.0-flash"  # Cheaper для testing
     temperature: 0.0
     max_tokens: 8192
     system_instruction_path: ".gemini/prompts/tester_prompt.txt"
@@ -38,8 +71,13 @@ agents:
     execution_timeout: 300  # 5 minutes
     retry_limit: 3
 
-orchestrator:
+global:
+  project_name: "PZ Generator"
+  logging_level: "INFO"
+  
+workflow:
   max_iterations: 3
-  min_quality_score: 70
+  min_quality_score: 80
   enable_human_review: true
-  human_review_threshold: 50
+  human_review_threshold: 60
+  parallel_execution: false
